@@ -1,31 +1,63 @@
-# ================================
-# Calculator Class
-# ================================
+"""Core arithmetic logic for the calculator application."""
+
+from __future__ import annotations
+
+Number = float | int
+
 
 class Calculator:
-    def add(self, a, b):
-        """Return the sum of a and b."""
-        return a + b
+    """Perform basic arithmetic operations on numeric operands."""
 
-    def subtract(self, a, b):
-        """Return the difference of a and b."""
-        return a - b
+    @staticmethod
+    def _coerce_operand(value: object, name: str) -> float:
+        """Convert ``value`` to ``float`` ensuring it is numeric."""
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise TypeError(f"{name} must be a real number.")
+        return float(value)
 
-    def multiply(self, a, b):
-        """Return the product of a and b."""
-        return a * b
+    @classmethod
+    def _prepare_operands(cls, a: object, b: object) -> tuple[float, float]:
+        """Validate and convert operands prior to an operation."""
+        return cls._coerce_operand(a, "a"), cls._coerce_operand(b, "b")
 
-    def divide(self, a, b):
-        """Return the quotient of a and b. Raises ValueError on division by zero."""
-        if b == 0:
+    def add(self, a: Number, b: Number) -> float:
+        """Return the sum of *a* and *b*.
+
+        Raises:
+            TypeError: If either operand is not numeric.
+        """
+        left, right = self._prepare_operands(a, b)
+        return left + right
+
+    def subtract(self, a: Number, b: Number) -> float:
+        """Return the difference of *a* and *b*.
+
+        Raises:
+            TypeError: If either operand is not numeric.
+        """
+        left, right = self._prepare_operands(a, b)
+        return left - right
+
+    def multiply(self, a: Number, b: Number) -> float:
+        """Return the product of *a* and *b*.
+
+        Raises:
+            TypeError: If either operand is not numeric.
+        """
+        left, right = self._prepare_operands(a, b)
+        return left * right
+
+    def divide(self, a: Number, b: Number) -> float:
+        """Return the quotient of *a* and *b*.
+
+        Raises:
+            TypeError: If either operand is not numeric.
+            ValueError: If ``b`` is zero.
+        """
+        left, right = self._prepare_operands(a, b)
+        if right == 0:
             raise ValueError("Cannot divide by zero.")
-        return a / b
+        return left / right
 
-# Example usage:
-if __name__ == "__main__":
-    calc = Calculator()
-    print("Addition: ", calc.add(10, 5))
-    print("Subtraction: ", calc.subtract(10, 5))
-    print("Multiplication: ", calc.multiply(10, 5))
-    print("Division: ", calc.divide(10, 5))
-    
+
+__all__ = ["Calculator"]
